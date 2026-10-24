@@ -1,83 +1,79 @@
-# Markdown 个人博客模板
+# wengxiaozhou42 的个人博客
 
-这是一个不需要 Node.js、npm 或 React 的 Jekyll 静态博客模板。
+线上地址：<https://wengxiaozhou42-eng.github.io/>
 
-## 学生开箱步骤
-
-1. 打开模板仓库，点击 **Use this template → Create a new repository**。
-2. 填写自己决定的仓库名称和公开/私有可见性。
-3. 创建完成后，进入自己仓库的 **Settings → Pages**，把 Source 设为 **GitHub Actions**。
-4. 等待 `Build and deploy Jekyll site` workflow 完成，再打开 Pages URL。
-5. 修改 `_config.yml` 中的名字，编辑 `index.html` 的项目卡片，并在 `_posts/` 中写自己的 Markdown 文章。
-
-仓库创建和 Pages 设置也可以让 Agent 操作，但必须先把目标仓库 URL 明确告诉 Agent，并在推送前检查 `git diff`。
-
-注意：仓库里的 `index.html` 是 Jekyll 模板源码，不能靠双击本地文件看到最终页面；最终 HTML 会由 GitHub Actions 生成。学生不需要在电脑上安装 Ruby、Jekyll、Node.js 或 npm。
+用 [nice-template](https://github.com/yejianqin61-cell/nice-template) 搭的 Jekyll 静态博客，发布在 GitHub Pages 上。界面是液态玻璃（Liquid Glass / glassmorphism）风格：半透明磨砂面板、胶囊导航、彩色光斑背景，全部用纯 CSS 实现。没有 Node.js、npm、React、Vue，也没有外部 CDN 和构建工具；HTML/CSS/Markdown 之外什么都不需要。
 
 ## 写一篇新文章
 
-在 `_posts/` 中复制示例文章，文件名使用：
-
-```text
-YYYY-MM-DD-title.md
-```
-
-文章开头保留 Front Matter：
+在 `_posts/` 新建 `YYYY-MM-DD-title.md`，开头保留 Front Matter：
 
 ```yaml
 ---
 layout: post
 title: 文章标题
-date: 2026-10-08
+date: 2026-10-24
 excerpt: 一句话摘要
 tags:
-  - 学习
+  - 标签
 ---
+
+正文用 Markdown 写：标题、段落、列表、表格、链接、代码块都可以。
 ```
 
-第二个 `---` 之后直接写 Markdown 正文：标题、段落、列表、链接、代码块都可以使用。
+文件名里的日期决定排序，`title`（文件名去掉日期和扩展名）决定网址：`/posts/<title>/`。注意 `date` 不要写成未来日期，Jekyll 默认不发布未来文章。
 
-## 发布流程
+## 文件说明
 
-1. 修改或新增 `_posts/*.md`。
-2. 修改首页内容时编辑 `index.html`。
-3. 修改关于页时编辑 `about.md`。
-4. 修改配色和排版时编辑 `assets/style.css`。
-5. 在浏览器中检查文件内容和链接。
-6. `git diff` 检查变更。
-7. `git add`、`git commit`、`git push`。
-8. GitHub Actions 自动运行 Jekyll，将 Markdown 编译成 HTML 并发布到 GitHub Pages。
+| 文件 | 作用 |
+| --- | --- |
+| `_config.yml` | 站点标题、描述、语言、时区、permalink |
+| `index.html` | 首页：自我介绍、文章列表、项目卡片 |
+| `about.md` | 关于页 |
+| `_posts/*.md` | 文章 |
+| `_layouts/default.html` | 公共布局：导航、页头、页脚 |
+| `_layouts/post.html` | 文章页布局 |
+| `assets/style.css` | 配色（顶部 CSS 变量）和排版 |
+| `.github/workflows/pages.yml` | GitHub Actions：构建并部署到 Pages |
 
-## 第一次启用 Pages
+## 改配色（液态玻璃）
 
-把仓库推送到 GitHub 后，在仓库中打开：
+`assets/style.css` 顶部是一组 CSS 变量，改这里就能换整站风格，不用动其他样式：
 
-```text
-Settings → Pages → Source → GitHub Actions
+```css
+:root {
+  --ink: #0e1a33;          /* 正文颜色 */
+  --muted: #46557a;        /* 次要文字 */
+  --accent: #6d4df6;       /* 主色（紫） */
+  --accent-2: #00a6c0;     /* 辅助色（青） */
+  --accent-3: #e35d9b;     /* 点缀色（粉） */
+  --accent-ink: #4a34c9;   /* 链接和强调文字 */
+  --glass: rgba(255,255,255,.42);        /* 玻璃底色 */
+  --glass-strong: rgba(255,255,255,.64); /* 导航等更实的玻璃 */
+  --glass-line: rgba(255,255,255,.75);   /* 玻璃高光边 */
+}
 ```
 
-之后每次推送到 `main`，workflow 都会重新生成网站。
+彩色光斑背景在 `body` 的 `background-image` 里，磨砂效果来自各面板的 `backdrop-filter`。改完用浏览器打开即可预览，不需要安装任何依赖。
 
-## 需要学生理解的概念
+## 发布
 
-```text
-Markdown 文章
-      ↓
-Jekyll / GitHub Actions
-      ↓
-HTML 页面
-      ↓
-GitHub Pages URL
-```
+1. `git status` 和 `git diff` 检查改动
+2. `git add -A`
+3. `git commit -m "写清楚这次改了什么"`
+4. `git push`
+5. 推送后 GitHub Actions 自动构建，打开 <https://wengxiaozhou42-eng.github.io/> 确认
 
-学生不需要在本地安装 Ruby、Jekyll、Node.js 或 npm。构建发生在 GitHub Actions 上。
+本地不需要安装 Ruby 或 Jekyll，页面由 Action 生成。第一次使用时，仓库的 Settings → Pages → Source 要设为 **GitHub Actions**（已配置）。
 
-## Agent 提示词
+## 仓库结构
 
 ```text
-/goal 这是一个 Jekyll 静态博客项目。请先读取 README、_config.yml、index.html、_layouts 和 _posts。
-以后新增文章时，只在 _posts/ 中创建 YYYY-MM-DD-title.md，并使用现有 Front Matter 和 layout: post。
-不要引入 React、Vue、Node.js、npm、外部 CDN 或新的构建工具。
-修改前先列出文件和计划；修改后检查 Markdown Front Matter、文章链接、相对资源路径和 Git diff。
-我确认目标仓库后，才执行 git commit 和 git push。
+├── _config.yml
+├── index.html
+├── about.md
+├── _posts/
+├── _layouts/
+├── assets/style.css
+└── .github/workflows/pages.yml
 ```
